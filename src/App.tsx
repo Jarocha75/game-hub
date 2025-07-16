@@ -7,6 +7,7 @@ import type { Genre } from "./hooks/useGenres";
 import PlatformSelector from "./components/PlatformSelector";
 import type { Platform } from "./hooks/useGames";
 import SortSelector from "./components/SortSelector";
+import useDebounce from "./hooks/useDebounce";
 
 export interface GameQuery {
   genre: Genre | null;
@@ -17,6 +18,7 @@ export interface GameQuery {
 
 function App() {
   const [gameQuery, setGameQuery] = useState<GameQuery>({} as GameQuery);
+  const debouncedSearchText = useDebounce(gameQuery.searchText, 500);
 
   return (
     <Grid
@@ -57,7 +59,9 @@ function App() {
             }
           />
         </HStack>
-        <GameGrid gameQuery={gameQuery} />
+        <GameGrid
+          gameQuery={{ ...gameQuery, searchText: debouncedSearchText }}
+        />
       </GridItem>
     </Grid>
   );
